@@ -24,7 +24,7 @@ urlpatterns = [
     path('Snippets/',include('apps.snippets.urls')),
 
 ]
-#
-# urlpatterns+=[
-#     path('api-auth/',conf_include('rest_framework.urls'))
-# ]
+
+urlpatterns+=[
+    path('api-auth/',conf_include('rest_framework.urls'))
+]

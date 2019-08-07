@@ -6,20 +6,19 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
 from django.http import Http404
 from rest_framework.views import APIView
 
 from rest_framework import mixins
-from  rest_framework import generics
+from rest_framework import generics
 
 from django.contrib.auth.models import User
 
 from .models import Snippet
 from .serializers import SnippetSerializer
+from .serializers import UserSerializer
 
 from rest_framework import permissions
-
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -29,18 +28,30 @@ from rest_framework import renderers
 from rest_framework.response import Response
 
 
-
 class SnippetList(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class SnippetDetail(generics.RetrieveAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
-#
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
 # class UserList(generics.ListAPIView):
 #     queryset = User.objects.all()
 #     serializer_class =UserSerializer
@@ -48,6 +59,9 @@ class SnippetDetail(generics.RetrieveAPIView):
 # class UserDetail(generics.RetrieveAPIView):
 #     queryset = User.objects.all()
 #     serializer_class = UserSerializer
+
+
+
 
 # class SnippetList(mixins.ListModelMixin,
 #                   mixins.CreateModelMixin,
@@ -80,6 +94,8 @@ class SnippetDetail(generics.RetrieveAPIView):
 #         return self.destroy(request,*args,**kwargs)
 
 
+
+
 # class SnippetList(APIView):
 #
 #     def get(self, request, format=None):
@@ -93,6 +109,8 @@ class SnippetDetail(generics.RetrieveAPIView):
 #             serializer.save()
 #             return Response(serializer.data, status=status.HTTP_201_CREATED)
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 # class SnippetDetail(APIView):
@@ -123,11 +141,7 @@ class SnippetDetail(generics.RetrieveAPIView):
 
 
 
-# '''
-# 使用到装饰器@api_view的情况
-# '''
-#
-#
+
 # @api_view(['GET', 'POST'])
 # def snippet_list(request, format=None):
 #     if request.method == "GET":
@@ -164,6 +178,7 @@ class SnippetDetail(generics.RetrieveAPIView):
 #     elif request.method == "DELETE":
 #         snippet.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 
