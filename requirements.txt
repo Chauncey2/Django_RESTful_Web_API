@@ -1,3 +1,2 @@
-django>=2.2.3
-djangorestframework>=3.10.1
-pygments>=2.4.2
+django==2.2.3
+djangorestframework==3.10.1
